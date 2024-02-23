@@ -14,6 +14,7 @@ mongoose.connect(DB_URL)
 
 const userRoutes = require('./routes/UserRoutes')
 const houseRoutes = require('./routes/HouseRoutes')
+const messageRoutes = require('./routes/MessageRoutes')
 
 // Metodo [GET, POST, PUT, PATCH, DELETE]
 // NOMBRE DEL SERVICIO [/]      *NUNCA LLEVAN ESPACIOS
@@ -23,14 +24,25 @@ router.get('/', (req, res) => {
   res.send("Hello world")
 })
 
-io.on('connect',(socket) => {
-  console.log('connected')
-//escuchando eventos desde el servidor
-  socket.on('message', (data) => {
-    console.log(data)
+const MessageSchema = require('./models/Message')
 
-    //emitimos mensaje hacia al cliente
-    socket.emit('message-receipt',{"message":"Mensaje recibido en el servidor"})
+io.on('connect', (socket) => {
+  console.log('connected')
+  //escuchando eventos desde el servidor
+  socket.on('message', (data) => {
+    // almacenando el mensaje en la base de datos
+    var payload = JSON.parse(data)
+    console.log(payload)
+    MessageSchema(payload).save().then((result) => {
+      socket.emit('message-receipt', { "message": "Mensaje recibido en el servidor" })
+      //emitimos mensaje hacia al cliente
+    }).catch((err) => {
+      console.log({ "status": "error", "message": err.message })
+    })
+  })
+
+  socket.on('disconnect', (socket) => {
+    console.log("disconected")
   })
 })
 
@@ -38,13 +50,15 @@ app.use(express.urlencoded({ extended: true })) // Acceder a la informacion de l
 app.use(express.json()) // Analizar informacion en formato JSON
 app.use((req, res, next) => {
   res.io = io
-  next
+  next()
 })
 // ejecutar servidor
 app.use(router);
 app.use('/upload', express.static('upload'))
 app.use('/', userRoutes)
 app.use('/', houseRoutes)
+app.use('/', messageRoutes)
+
 http.listen(port, () => {
   console.log('listen on ' + port)
 })

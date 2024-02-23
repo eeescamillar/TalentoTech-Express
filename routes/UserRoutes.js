@@ -25,7 +25,7 @@ router.post('/userw', (req, res) => {
     "Username": req.body.name,
     "lastname": req.body.lastname,
     "age": req.body.name,
-  } 
+  }
   res.send(user)
 })
 
@@ -68,7 +68,7 @@ router.post('/user', async (req, res) => {
 })
 
 //router.get('/user', userController.validateToken, async (req, res) => {
-router.get('/user',  async (req, res) => {
+router.get('/user', async (req, res) => {
   //Traer todos los usuarios
   let users = await UserSchema.find();
   //console.log(users)

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div>
+    <h1>Mensajes en tiempo real</h1>
+    <div id="mensajes">
+
+    </div>
+    <div>
+      <textarea rows="10" cols="30" name="envio-mensajes" id=""></textarea> <br>
+      <button type="button" id="send">Enviar</button>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+  integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    var socket = io('http://localhost:3000', {
+      transports: ['websocket']
+    })
+
+    socket.on('connect', function (socket) {
+      console.log('connected')
+    })
+
+    socket.on('messages', function (data) {
+      addMenssages(data)
+    })
+
+    $("#send").clik(function () {
+      content = $("textarea").val();
+
+      var data = JSON.stringify({
+        "body": content,
+        "from": "65cfd9f6df9a62d18fb22830",
+        "to": "65cd6ae7e066b4fedd7c7da5"
+      });
+
+      socket.emit.broadcast("message", data)
+    })
+  })
+
+  function addMenssage(data) {
+    const messageElement = document.createElement('li');
+    messageElement.textContent = data.body
+
+    const menssagesDiv = document.getElementById('mensajes')
+    menssagesDiv.appendChild(messageElement)
+  }
+</script>
+
+</html>
