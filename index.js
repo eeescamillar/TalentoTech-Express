@@ -26,6 +26,7 @@ router.get('/', (req, res) => {
 
 const MessageSchema = require('./models/Message')
 
+/** Metodo websocket **/
 io.on('connect', (socket) => {
   console.log('connected')
   //escuchando eventos desde el servidor
@@ -34,7 +35,8 @@ io.on('connect', (socket) => {
     var payload = JSON.parse(data)
     console.log(payload)
     MessageSchema(payload).save().then((result) => {
-      socket.emit('message-receipt', { "message": "Mensaje recibido en el servidor" })
+      /* Enviando mensaje a todos los clientes conectados al websocket */
+      socket.broadcast.emit('message-receipt', payload)
       //emitimos mensaje hacia al cliente
     }).catch((err) => {
       console.log({ "status": "error", "message": err.message })

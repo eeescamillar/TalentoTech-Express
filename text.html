@@ -2,20 +2,19 @@
 <html lang="en">
 
 <head>
-  <title></title>
+  <title>Document</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
   <div>
     <h1>Mensajes en tiempo real</h1>
     <div id="mensajes">
-
+      <!-- AQUI VAN LOS MENSAJES-->
     </div>
     <div>
-      <textarea rows="10" cols="30" name="envio-mensajes" id=""></textarea> <br>
+      <input rows="10" cols="30" name="envio-mensajes" id="envio-mensajes"> <br>
       <button type="button" id="send">Enviar</button>
     </div>
   </div>
@@ -26,6 +25,7 @@
 
 <script>
   $(document).ready(function () {
+    //aqui implementamos la parte de escucha 
     var socket = io('http://localhost:3000', {
       transports: ['websocket']
     })
@@ -33,30 +33,51 @@
     socket.on('connect', function (socket) {
       console.log('connected')
     })
+    // finalizacion de la escucha 
 
-    socket.on('messages', function (data) {
+    /* Escuchando el envento en la pagina web */
+    socket.on('message-receipt', function (data) {
+      //console.log(data)
       addMenssages(data)
     })
 
-    $("#send").clik(function () {
-      content = $("textarea").val();
+    // aqui se prepara el envio
+    $("#send").click(function () {
+      prepareMessage(socket);
+    })
 
-      var data = JSON.stringify({
-        "body": content,
-        "from": "65cfd9f6df9a62d18fb22830",
-        "to": "65cd6ae7e066b4fedd7c7da5"
-      });
-
-      socket.emit.broadcast("message", data)
+    $("#envio-mensajes").on("keypress", function () {
+      if (event.which === 13) {
+        prepareMessage(socket);
+      }
     })
   })
 
-  function addMenssage(data) {
+  function addMenssages(data, sender = false) {
     const messageElement = document.createElement('li');
     messageElement.textContent = data.body
+    if (sender) {
+      messageElement.style.color = 'olive';
+    }
 
     const menssagesDiv = document.getElementById('mensajes')
     menssagesDiv.appendChild(messageElement)
+    $("#envio-mensajes").val("");
+  }
+
+  function prepareMessage(socket) {
+    content = $("#envio-mensajes").val();
+
+    var payload = {
+      "body": content,
+      "from": "65cfd9f6df9a62d18fb22830",
+      "to": "65cd6ae7e066b4fedd7c7da5"
+    }
+
+    var data = JSON.stringify(payload);
+
+    socket.emit("message", data)
+    addMenssages(payload, true)
   }
 </script>
 
