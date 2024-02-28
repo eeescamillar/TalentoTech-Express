@@ -7,6 +7,9 @@ const socket = require('socket.io')
 const http = require('http').Server(app)
 const io = socket(http)
 
+const { createYoga } = require('graphql-yoga');
+const schema = require('./graphsql/schema')
+
 const DB_URL = process.env.DB_URL || '';
 
 const mongoose = require('mongoose')
@@ -54,6 +57,10 @@ app.use((req, res, next) => {
   res.io = io
   next()
 })
+
+const yoga = new createYoga({ schema });
+app.use('/graphql', yoga);
+
 // ejecutar servidor
 app.use(router);
 app.use('/upload', express.static('upload'))
@@ -64,3 +71,5 @@ app.use('/', messageRoutes)
 http.listen(port, () => {
   console.log('listen on ' + port)
 })
+
+module.exports = http
