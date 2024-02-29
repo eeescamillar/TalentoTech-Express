@@ -1,4 +1,4 @@
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLBoolean, GraphQLInt, GraphQLInputObjectType, GraphQLSchema, GraphQLList } = require('graphql')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLBoolean, GraphQLInt, GraphQLInputObjectType, GraphQLSchema, GraphQLList, GraphQLFloat } = require('graphql')
 const resolvers = require('./resolvers')
 
 const User = new GraphQLObjectType({
@@ -23,6 +23,15 @@ const Message = new GraphQLObjectType({
   }
 })
 
+const MessageFilterInput = new GraphQLInputObjectType({
+  name: 'MessageFilterInput',
+  fields: {
+    body: { type: GraphQLString },
+    from: { type: GraphQLString },
+    to: { type: GraphQLString }
+  }
+})
+
 const House = new GraphQLObjectType({
   name: 'House',
   fields: {
@@ -36,8 +45,20 @@ const House = new GraphQLObjectType({
     code: { type: GraphQLString },
     rooms: { type: GraphQLInt },
     bathrooms: { type: GraphQLInt },
-    price: { type: GraphQLInt },
+    price: { type: GraphQLFloat },
     image: { type: GraphQLString }
+  }
+})
+
+const HouseFilterInput = new GraphQLInputObjectType({
+  name: 'HouseFilterInput',
+  fields: {
+    address: { type: GraphQLString },
+    city: { type: GraphQLString },
+    size: { type: GraphQLInt },
+    rooms: { type: GraphQLInt },
+    bathrooms: { type: GraphQLInt },
+    price: { type: GraphQLFloat }
   }
 })
 
@@ -83,6 +104,31 @@ const queries = {
   Houses: {
     type: GraphQLList(House),
     resolve: resolvers.Houses
+  },
+  HousesByFilter: {
+    type: GraphQLList(House),
+    resolve: resolvers.HousesByFilter,
+    args: {
+      filter: { type: HouseFilterInput }
+    }
+  },
+  Message: {
+    type: Message,
+    resolve: resolvers.Message,
+    args: {
+      id: { type: GraphQLID }
+    }
+  },
+  Messages: {
+    type: GraphQLList(Message),
+    resolve: resolvers.Messages
+  },
+  MessagesByFilter: {
+    type: GraphQLList(Message),
+    resolve: resolvers.MessagesByFilter,
+    args: {
+      filter: { type: MessageFilterInput }
+    }
   }
 }
 
