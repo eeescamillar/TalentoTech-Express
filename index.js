@@ -18,6 +18,7 @@ mongoose.connect(DB_URL)
 const userRoutes = require('./routes/UserRoutes')
 const houseRoutes = require('./routes/HouseRoutes')
 const messageRoutes = require('./routes/MessageRoutes')
+const deparmentRoutes = require('./read_file')
 
 // Metodo [GET, POST, PUT, PATCH, DELETE]
 // NOMBRE DEL SERVICIO [/]      *NUNCA LLEVAN ESPACIOS
@@ -67,6 +68,7 @@ app.use('/upload', express.static('upload'))
 app.use('/', userRoutes)
 app.use('/', houseRoutes)
 app.use('/', messageRoutes)
+app.use('/', deparmentRoutes)
 
 http.listen(port, () => {
   console.log('listen on ' + port)
