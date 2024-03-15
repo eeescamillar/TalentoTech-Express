@@ -2,12 +2,15 @@ const request = require('supertest'); // Libreria para probar APIs
 const app = require('../index.js'); // importando todas las rutas
 
 const objectToTest = {
-            "id": 7845454,
-            "name": "Brad",
-            "lastname": "Pitt",
-            "email": "brad-pitt@correo.com",
-            "password": "SoyBrad"
-        }
+      "_id": "65cfd9f6df9a62d18fb22830",
+      "id": 94321,
+      "name": "Cristiano",
+      "lastname": "Ronaldo",
+      "email": "cr7siuuu@gmail.com",
+      "password": "$2b$10$oIjPeaMZCbiLrZl3Ahz4tu4b1aihtRewCNSm.apBgwAIuRE/0vG2S",
+      "__v": 0,
+      "avatar": "upload/1708391102711-salah.jpeg"
+    }
 let userId;
 let token; 
 

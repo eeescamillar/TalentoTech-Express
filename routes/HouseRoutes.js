@@ -24,7 +24,7 @@ router.post('/house', async (req, res) => {
   house.save().then((result) => {
     res.send(result)
   }).catch((err) => {
-    res.send({ "status": "error", "message": "Error almacenado la informacion" })
+    res.status(400).send({ "status": "error", "message": "Error almacenado la informacion", err })
   })
 })
 
@@ -42,7 +42,7 @@ router.get('/house/:id', async (req, res) => {
     let house = await HouseSchema.findById(id);
     res.json(house)
   } catch (error) {
-    res.send('Casa o inmueble no encontrado')
+    res.status(404).send('Casa o inmueble no encontrado')
   }
 })
 
@@ -70,7 +70,7 @@ router.patch('/house/:id', (req, res) => {
       res.send(result);
     }).catch((err) => {
       console.log(err);
-      res.send("Error actualizando el registro")
+      res.status(400).send("Error actualizando el registro")
     })
   } catch (error) {
     res.send(error)
@@ -125,7 +125,7 @@ router.delete('/house/:id', (req, res) => {
     res.json({ "status": "success", "message": "House deleted successfully" })
   }).catch((error) => {
     console.log(error)
-    res.json({ "status": "failed", "message": "Error deleting house" })
+    res.status(404).json({ "status": "failed", "message": "Error deleting house" })
   })
 })
 

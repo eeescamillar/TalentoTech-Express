@@ -11,7 +11,7 @@ const HouseSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: async function(city) {
-        var response = await fetch('https://api.colombia.com/api/v1/City');
+        var response = await fetch('https://api-colombia.com/api/v1/City');
         var cities = await response.json()
         return cities.some(object => object.name.toUpperCase().includes(city.toUpperCase()));
       },
