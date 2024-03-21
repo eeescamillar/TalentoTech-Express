@@ -6,7 +6,8 @@ require('dotenv').config()
 class UserController {
 
   constructor() {
-    var JWT_SECRET = process.env.JWT_SECRET || '';
+    this.jwtSecret = process.env.JWT_SECRET || '';
+    this.validateToken = this.validateToken.bind(this)
   }
 
   async login(email, password) {
@@ -23,7 +24,7 @@ class UserController {
         return { "status": "error", "message": "Contraseña incorrecta" }
       }
 
-      const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' })
+      const token = jwt.sign({ userId: user._id, email: user.email, role:"admin" }, this.jwtSecret, { expiresIn: '1h' })
 
       return { "status": "Succes", "token": token }
 
@@ -40,7 +41,7 @@ class UserController {
     }
 
     const token = bearerToken.startsWith("Bearer ") ? bearerToken.slice(7) : bearerToken;
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, this.jwtSecret, (err, decoded) => {
       if (err) {
         return res.status(401).json({ "message": "Token invalido" });
       }

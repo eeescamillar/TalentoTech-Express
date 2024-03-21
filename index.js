@@ -4,6 +4,8 @@ const router = express.Router(); // enrutar los servicios web
 const port = 3000; // Escuchar el servidor
 require('dotenv').config() //Obtendremos las variables de entorno
 const socket = require('socket.io')
+const cors = require('cors')
+app.use(cors());
 const http = require('http').Server(app)
 const io = socket(http)
 
