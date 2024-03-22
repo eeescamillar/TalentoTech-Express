@@ -103,7 +103,8 @@ router.patch('/user/:id', (req, res) => {
       name: req.body.name,
       lastname: req.body.lastname,
       email: req.body.email,
-      id: req.body.id
+      id: req.body.id,
+      avatar: req.body.avatar
     };
 
     // Cuando viene por el body se usa body
@@ -138,7 +139,11 @@ router.post('/login', (req, res) => {
   const password = req.body.password;
 
   userController.login(email, password).then((result) => {
-    res.send(result)
+    if (result.status == "error") {
+      res.status(401).send(result)
+    } else {
+      res.send(result)
+    }
   })
 })
 
