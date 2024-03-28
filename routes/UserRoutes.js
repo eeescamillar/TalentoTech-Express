@@ -92,11 +92,16 @@ router.get('/user/:id', async (req, res) => {
   // const user = await query.findOne()
 })
 
-router.patch('/user/:id', (req, res) => {
+router.patch('/user/:id',userController.validateToken, async (req, res) => {
   // Informacion a modificar
   // Cuando viene por la URL del servicio web params
   try {
     var id = req.params.id;
+
+    let hashedPassword;
+    if(req.body.password){
+      hashedPassword = await bcrypt.hash(req.body.password, 10)
+    }
 
     // Check if req.body exists and has the expected properties
     var updateUser = {
@@ -104,7 +109,8 @@ router.patch('/user/:id', (req, res) => {
       lastname: req.body.lastname,
       email: req.body.email,
       id: req.body.id,
-      avatar: req.body.avatar
+      avatar: req.body.avatar,
+      password: hashedPassword,
     };
 
     // Cuando viene por el body se usa body
