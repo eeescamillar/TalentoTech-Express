@@ -6,38 +6,6 @@ const multer = require('multer')
 const UserSchema = require('../models/User.js')
 const UserController = require('../controllers/UserController')
 const userController = new UserController();
-//prueba  
-router.get('/name', (req, res) => {
-  // recibiendo informacion como parametro
-  res.send(req.query.name)
-}) // http://localhost:3000/name?name=juan
-
-//prueba  
-router.get('/userw/:name', (req, res) => {
-  // recibiendo informacion como parametro
-  console.log(req.params.name)
-  res.send(req.params.name)
-}) // http://localhost:3000/name?name=juan
-
-router.post('/userw', (req, res) => {
-  //informacion a modificar
-  var user = {
-    "Username": req.body.name,
-    "lastname": req.body.lastname,
-    "age": req.body.name,
-  }
-  res.send(user)
-})
-
-router.get('/prueba', (req, res) => {
-  //informacion a modificar
-  res.send("me ejecute por GET")
-})
-
-router.get('/prueba/id', (req, res) => {
-  //informacion a modificar
-  res.send("me ejecute por GET pasando el ID: " + req.params.id)
-})
 
 router.post('/user', async (req, res) => {
   //informacion a modificar
