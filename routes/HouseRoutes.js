@@ -2,10 +2,15 @@ const express = require('express')
 
 const router = express.Router();
 const multer = require('multer')
-const HouseSchema = require('../models/House.js')
+const HouseSchema = require('../models/House.js');
+const { generationRandomCode, generateZipCodes } = require('../utils/randomCodes.js');
+
 
 // create
 router.post('/house', async (req, res) => {
+
+  const newCode = await generationRandomCode();
+  const newZipCode = generateZipCodes();
 
   let house = HouseSchema({
     address: req.body.address,
@@ -13,12 +18,12 @@ router.post('/house', async (req, res) => {
     state: req.body.state,
     size: req.body.size,
     type: req.body.type,
-    zip_code: req.body.zip_code,
+    zip_code: newZipCode,
     rooms: req.body.rooms,
     bathrooms: req.body.bathrooms,
     parking: req.body.parking,
     price: req.body.price,
-    code: req.body.code
+    code: newCode
   })
 
   house.save().then((result) => {

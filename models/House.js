@@ -24,7 +24,7 @@ const HouseSchema = new mongoose.Schema({
     validate: {
       validator: async function(state) {
         var response = await fetch('https://api-colombia.com/api/v1/Department');
-        var departments = await response.json()       
+        var departments = await response.json()
         return departments.some(department => department.name.toUpperCase().includes(state.toUpperCase()));
       },
       message: props => '${props.value} no es un departamento de Colombia!!'
@@ -66,6 +66,6 @@ const HouseSchema = new mongoose.Schema({
   image: {
     type: String
   }
-})
+});
 
 module.exports = mongoose.model('house', HouseSchema) 
